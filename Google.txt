@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="jquery.js"></script>
+	<script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>  
+    <script>
+	var clientId = "525353367558-clbcsfpi2j08dhhtp2qbe5lackfr0fj3.apps.googleusercontent.com";
+var apiKey = "AIzaSyAWIn9q3s6oRXsE8gMWfkVXws4co99VrH8";
+var scopes = 'https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/plus.profiles.read'; 
+ 
+ 
+	function handleClientLoad() {
+    gapi.client.setApiKey(apiKey);
+}
+ 
+//Gets the result after the authorization and if successful,
+//it makes the api call to get the  //user's information.
+function handleAuthResult(authResult) {
+ document.getElementById("demo").innerHTML = "!!!!!!!!";
+    if (authResult && !authResult.error) {
+        makeApiCall();
+    } 
+}
+  
+//Make api call on button click to authorize client
+function handleAuthClick(event) { 
+document.getElementById("demo").innerHTML = "handleAuthClick";
+gapi.auth.init(handleAuthResult) 
+var aa=gapi.auth.authorize({ client_id: clientId, 
+            scope: scopes, immediate: false }, handleAuthResult);
+ document.getElementById("demo").innerHTML = "handleAuthClick end"+aa;
+    return false;
+}
+ 
+// Load the API and make an API call.  Display the results on the screen.
+function makeApiCall() {
+
+   gapi.client.load('plus', 'v1').then(function() {
+          // Step 5: Assemble the API request
+		   document.getElementById("demo").innerHTML = "makeApiiiiCall";
+          var request = gapi.client.plus.people.get({
+            'userId': 'me'
+          });
+		  
+		  
+          // Step 6: Execute the API request
+          request.then(function(resp) {
+		    document.getElementById("demo").innerHTML = "inside";
+            document.getElementById("demo").innerHTML = "welcome!"+resp.result.displayName;
+           
+          }, function(reason) {
+            console.log('Error: ' + reason.result.error.message);
+          });
+        });
+   document.getElementById("demo").innerHTML = "makeApiiiiCalljjjj";   
+}
+
+
+
+
+ function myFunction() {
+    document.getElementById("demo").innerHTML = "myFunction";
+	handleAuthClick();
+}
+
+   </script>
+</head>
+
+<body>
+    <a href='#' onClick='login();' id="googlelogin" '> Click here to login </a>
+    <a href="#" style="display:none" id="logoutText" target='myIFrame' onclick="myIFrame.location='https://www.google.com/accounts/Logout'; startLogoutPolling();return false;"> Click here to logout </a>
+    <iframe name='myIFrame' id="myIFrame" style='display:none'></iframe>
+    <div id='uName'></div>
+	<button onclick="myFunction()">Click me</button>
+	  <div id='uName1'></div>
+    <img src='' id='imgHolder' />
+	<p id="demo"></p>
+</body>
+</html>
